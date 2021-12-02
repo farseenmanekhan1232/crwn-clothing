@@ -49,6 +49,7 @@ class App extends React.Component {
   render( ) {
     return (
       <div onClick={(clickedOn)=>{ 
+        console.log(clickedOn);
         // to Close cart whenever the use click on other Elements other than the "Add to Cart " Button
         if ((!this.props.hidden)&&(clickedOn.target.localName!=='button')
             &&(
