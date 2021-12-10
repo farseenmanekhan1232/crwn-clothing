@@ -8,16 +8,16 @@ import './cart-item.styles.scss';
 const CartItem = ({ item , clearItem}) =>{ 
   const { imageUrl, price, name, quantity } = item;
   return(
-  <div className='cart-item'>
+  <div className='cart-item '>
     <img src={imageUrl} alt='item' />
-    <div className='item-details'>
-      <span className='name'>{name}</span>
-      <span className='price'>
+    <div className='item-details '>
+      <span className='name nohiding'>{name}</span>
+      <span className='price nohiding'>
         {quantity} x ${price}
       </span>
     </div>
      <div className='remove-button-container' onClick={()=>clearItem(item)}>
-       <div className='remove-button'>
+       <div className='remove-button nohiding'>
          &#10005;
        </div>
     </div>

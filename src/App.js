@@ -13,13 +13,13 @@ import CheckoutPage from './pages/checkout/checkout.component';
 
 import Header from './components/header/header.component';
 
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import {auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 import { setCurrentUser } from './redux/user/user.actions';
-import { toggleCartHidden } from './redux/cart/cart.actions';
-
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { selectCartHidden } from './redux/cart/cart.selectors';
+import { toggleCartHidden } from './redux/cart/cart.actions';
+
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -47,18 +47,8 @@ class App extends React.Component {
   }
 
   render( ) {
-    return (
-      <div onClick={(clickedOn)=>{ 
-        console.log(clickedOn);
-        // to Close cart whenever the use click on other Elements other than the "Add to Cart " Button
-        if ((!this.props.hidden)&&(clickedOn.target.localName!=='button')
-            &&(
-              (clickedOn.target.localName!=='div')||(clickedOn.target.className!=='remove-button')
-              ))
-        {
-              this.props.toggleCart();
-        }
-      }}>
+  return (
+      <div  >
         <Header />
         <Switch>
           <Route exact path='/' component={HomePage} />
@@ -82,14 +72,13 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser , 
-  hidden : selectCartHidden
+  currentUser: selectCurrentUser,
+  hidden:selectCartHidden
 });
 
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user)) , 
   toggleCart:()=>dispatch(toggleCartHidden())
-
 });
 
 export default connect(
