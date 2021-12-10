@@ -7,7 +7,7 @@ import CollectionItem from '../collection-item/collection-item.component';
 import './collection-preview.styles.scss';
 
 const CollectionPreview = ({ title, items , history}) => {
-  console.log();
+  let noOfItems = 0;
   return(
   <div className='collection-preview'>
     <div className='header'>
@@ -15,11 +15,14 @@ const CollectionPreview = ({ title, items , history}) => {
       <Link to={`${history.location.pathname}/${title.toLowerCase()}`}  className='more'>view more</Link>
     </div>
     <div className='preview'>
-      {items
-        .filter((item, idx) => idx < 4)
-        .map(item => (
-          <CollectionItem key={item.id} item={item} />
-        ))}
+      {items.map(item => {
+        if(noOfItems>3){
+          return [];
+        }
+        noOfItems++;
+        return <CollectionItem key={item.id} item={item} />
+      }
+        )}
     </div>
   </div>
 )};
