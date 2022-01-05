@@ -8,7 +8,7 @@ import {
   signOutSuccess,
   signOutFailure,
   signUpSuccess,
-  signUpFailure,
+  signUpFailure
 } from './user.actions';
 
 import {
@@ -69,24 +69,17 @@ export function* signOut() {
   }
 }
 
-
-export function* signUp( {payload:{displayName , email, password, confirmPassword}}){
-  if (password !== confirmPassword) {
-    alert("passwords don't match");
-    return;
-  }
-
+export function* signUp({ payload: { email, password, displayName } }) {
   try {
-    const { user } = yield auth.createUserWithEmailAndPassword(
-      email,
-      password
-    );
-    yield createUserProfileDocument(user , {displayName});
-    yield put(signUpSuccess(user));
-    yield signInWithEmail({payload:{email , password}});
+    const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    yield put(signUpSuccess({ user, additionalData: { displayName } }));
   } catch (error) {
     yield put(signUpFailure(error));
   }
+}
+
+export function* signInAfterSignUp({ payload: { user, additionalData } }) {
+  yield getSnapshotFromUserAuth(user, additionalData);
 }
 
 export function* onGoogleSignInStart() {
@@ -105,8 +98,12 @@ export function* onSignOutStart() {
   yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
 }
 
-export function* onSignUpStart(){
-  yield takeLatest(UserActionTypes.SIGN_UP_START , signUp);
+export function* onSignUpStart() {
+  yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
+}
+
+export function* onSignUpSuccess() {
+  yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
 }
 
 export function* userSagas() {
@@ -114,7 +111,8 @@ export function* userSagas() {
     call(onGoogleSignInStart),
     call(onEmailSignInStart),
     call(onCheckUserSession),
-    call(onSignOutStart) , 
-    call(onSignUpStart)
+    call(onSignOutStart),
+    call(onSignUpStart),
+    call(onSignUpSuccess)
   ]);
 }
